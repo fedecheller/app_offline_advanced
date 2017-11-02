@@ -1,0 +1,53 @@
+<!--offline-->
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<style>
+body{font-family: arial;color:#0C2444}
+.sep{width:550px;background-color:#0C2444;height:2px;margin-bottom:24px}
+.timer{position:absolute;right:0;bottom:0}
+</style>
+</head>
+<body>
+&nbsp;<span id="timer" class="timer"></span>&nbsp;
+<br><br><br>
+<center>
+<!-- the file need to be not in your offline website -->
+<img src="http://www.webteur.com/assets/media/2015/08/icon_techsupport.png" />
+<br>
+<h1>Maintenance application</h1>
+<div class="sep"></div>
+The page will automatically verify that the system is reactivated.
+</center>
+<script>
+var timer;
+var counter = 10;
+function checkResult(result) {
+	if(result.responseText.substr(0,14) != '<!--offline-->') {
+		window.location.href = '/';
+	} else {
+		startTimer();
+	}
+}
+function startTimer() {
+	timer = setInterval(function(){
+		$('#timer').html('Next reactivation control in ' + ((counter.toString().length == 2) ? counter : '&nbsp;' + counter) + ' sec...');
+		counter--;
+	}, 1000);
+}
+setInterval(function(){ 
+	counter = 10;
+	clearInterval(timer);
+	$.ajax({
+		url: '/',   ///or another valid application url
+        method: 'GET',
+        cache: false,
+		complete: function (result) {
+			checkResult(result);
+		}
+	});
+}, 11000);
+startTimer();
+</script>
+</body>
+</html>
